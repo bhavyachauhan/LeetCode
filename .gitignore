@@ -1,0 +1,5 @@
+RemoteSystemsTempFiles/.project
+.metadata/
+SampleProject/.settings/org.eclipse.jdt.core.prefs
+*.project
+SampleProject/.classpath
