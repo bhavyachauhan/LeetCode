@@ -41,37 +41,41 @@ public class TreeSamples {
 	}
 
 	/**
-	 * 5 / \ / \ 4 8 / \ \ 3 11 6 / \ / 7 2 1
+	 *  	 5 
+	 * 		/ \ 
+	 * 	   /   \ 
+	 *    4     8 
+	 *   / \     \ 
+	 *  3   11    6 
+	 *     / \   / 
+	 *    7   2 1
 	 * 
-	 * Pre-order : 5, 4, 3, 11, 7, 2, 8, 6, 1 Post-order: 3, 7, 2, 11, 4, 1, 6,
-	 * 8, 5 In-order : 3, 4, 7, 11, 2, 5, 8, 1, 6
+	 * Pre-order : 5, 4, 3, 11, 7, 2, 8, 6, 1 
+	 * Post-order: 3, 7, 2, 11, 4, 1, 6, 8, 5 
+	 * In-order  : 3, 4, 7, 11, 2, 5, 8, 1, 6
 	 * 
 	 */
 	public static void checkTreeTraversal() {
-		TreeNode root5 = new TreeNode(5);
-		TreeNode node4 = new TreeNode(4);
-		TreeNode node8 = new TreeNode(8);
-		TreeNode node6 = new TreeNode(6);
-		TreeNode node7 = new TreeNode(7);
-		TreeNode node2 = new TreeNode(2);
-		TreeNode node1 = new TreeNode(1);
-		TreeNode node3 = new TreeNode(3);
-		TreeNode node11 = new TreeNode(11);
+		TreeNode root5 = new TreeNode(5); TreeNode node4 = new TreeNode(4); TreeNode node8 = new TreeNode(8);
+		TreeNode node6 = new TreeNode(6); TreeNode node7 = new TreeNode(7);TreeNode node2 = new TreeNode(2);
+		TreeNode node1 = new TreeNode(1); TreeNode node3 = new TreeNode(3); TreeNode node11 = new TreeNode(11);
 
-		root5.left = node4;
-		root5.right = node8;
-		node4.left = node3;
-		node4.right = node11;
-		node11.left = node7;
-		node11.right = node2;
+		root5.left = node4; root5.right = node8;
+		node4.left = node3; node4.right = node11;
+		node11.left = node7; node11.right = node2;
 		node8.right = node6;
 		node6.left = node1;
 		printTree(root5);
 
-		System.out.println("PreOrder Traversal: " + preorderTraversal(root5));
+		System.out.println("PreOrder Traversal: " + preOrderTraversal(root5));
 		List<Integer> preOrderResult = new ArrayList<>();
-		recursivePreorderTraversal(root5, preOrderResult);
+		recursivePreOrderTraversal(root5, preOrderResult);
 		System.out.println("Recursive PreOrder Traversal: " + preOrderResult);
+		System.out.println("PostOrder Traversal: " + postOrderTraversal(root5));
+		List<Integer> postOrderResult = new ArrayList<>();
+		recursivePostOrderTraversal(root5, postOrderResult);
+		System.out.println("Recursive PreOrder Traversal: " + postOrderResult);
+		
 	}
 
 	public static void checkSumNumbers() {
@@ -823,7 +827,7 @@ public class TreeSamples {
 		}
 	}
 
-	public static List<Integer> preorderTraversal(final TreeNode root) {
+	public static List<Integer> preOrderTraversal(final TreeNode root) {
 		List<Integer> result = new ArrayList<Integer>();
 		if (root == null) {
 			return result;
@@ -845,13 +849,13 @@ public class TreeSamples {
 		return result;
 	}
 
-	public static void recursivePreorderTraversal(final TreeNode root, final List<Integer> result) {
+	public static void recursivePreOrderTraversal(final TreeNode root, final List<Integer> result) {
 		if (root == null) {
 			return;
 		}
 		result.add(root.val);
-		recursivePreorderTraversal(root.left, result);
-		recursivePreorderTraversal(root.right, result);
+		recursivePreOrderTraversal(root.left, result);
+		recursivePreOrderTraversal(root.right, result);
 		return;
 	}
 
@@ -871,7 +875,7 @@ public class TreeSamples {
     		
     		//Going through tree until the leaf node
     		//checking prev == null for root node
-    		if(prev == null || curr.left == null || curr.right == null){
+    		if(prev == null || prev.left == curr || prev.right == curr){
     			if(curr.left != null){
     				stack.push(curr.left);
     			} else if(curr.right != null){
@@ -896,4 +900,15 @@ public class TreeSamples {
     	}
     	return result;
     }
+	
+	public static void recursivePostOrderTraversal(final TreeNode node, final List<Integer> result) {
+		if (node != null) {
+			recursivePostOrderTraversal(node.left, result);
+			recursivePostOrderTraversal(node.right, result);
+			result.add(node.val);
+		}
+		return;
+		
+	}
+
 }
