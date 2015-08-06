@@ -21,7 +21,7 @@ public class TreeSamples {
 		childRight1.left = new TreeNode(6);
 		childRight1.right = new TreeNode(9);
 
-		printTreeLevelOrder(root);
+//		printTreeLevelOrder(root);
 		// printTree(root);
 		// System.out.println("After Inverting...");
 		// printTree(invertRecursive(root));
@@ -34,8 +34,34 @@ public class TreeSamples {
 		// createAndCheckMaxDepth();
 		// createAndCheckMinDepth();
 		// createAndCheckLevelOrderTraversal();
+		checkPathSum2();
 	}
-
+	
+	/**
+	 *        5
+     *       / \
+     *      4   8
+     *     /   / \
+     *    11  13  4
+     *   /  \    / \
+     *  7    2  5   1
+     *  
+	 */
+	public static void checkPathSum2() {
+		TreeNode root5 = new TreeNode(5); TreeNode node4 = new TreeNode(4); TreeNode node8 = new TreeNode(8); TreeNode node11 = new TreeNode(11);
+		TreeNode node13 = new TreeNode(13); TreeNode node4_2 = new TreeNode(4); TreeNode node7 = new TreeNode(7); TreeNode node2 = new TreeNode(2);
+		TreeNode node5 = new TreeNode(5); TreeNode node1 = new TreeNode(1);
+		
+		root5.left = node8; root5.right = node4;
+		node4.left = node11;
+		node8.left = node13; node8.right = node4_2;
+		node11.left = node7; node11.right = node2;
+		node4_2.left = node5; node4_2.right = node1;
+		printTree(root5);
+		
+		System.out.println("Check Path Sum for 22: " + pathSum(root5, 22));
+	}
+	
 	public static void createAndCheckLevelOrderTraversal() {
 		// {3,9,20,#,#,15,7}
 		TreeNode root = new TreeNode(3);
@@ -656,5 +682,39 @@ public class TreeSamples {
 
 	// **************************************************************************************************
 	// **************************************************************************************************
-
+	public static List<List<Integer>> pathSum(TreeNode root, int sum) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if(root == null){
+			return result;
+		}
+		
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(root.val);
+		dfs(root, sum-root.val, result, list);
+		return result;
+    }
+	
+	public static void dfs(TreeNode node, int sum, List<List<Integer>> result, List<Integer> list){
+		
+		if(node.left == null && node.right == null && sum == 0){
+			List<Integer> temp = new ArrayList<Integer>();
+			temp.addAll(list);
+			result.add(temp);
+		}
+		
+		//search left nodes
+		if(node.left != null){
+			list.add(node.left.val);
+			dfs(node.left, sum - node.left.val, result, list);
+			list.remove(list.size() - 1);
+		}
+		
+		if(node.right != null){
+			list.add(node.right.val);
+			dfs(node.right, sum - node.right.val, result, list);
+			list.remove(list.size() - 1);
+		}
+		
+	}
+	
 }
