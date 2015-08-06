@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class TreeSamples {
 
@@ -21,7 +22,7 @@ public class TreeSamples {
 		childRight1.left = new TreeNode(6);
 		childRight1.right = new TreeNode(9);
 
-//		printTreeLevelOrder(root);
+		// printTreeLevelOrder(root);
 		// printTree(root);
 		// System.out.println("After Inverting...");
 		// printTree(invertRecursive(root));
@@ -34,34 +35,93 @@ public class TreeSamples {
 		// createAndCheckMaxDepth();
 		// createAndCheckMinDepth();
 		// createAndCheckLevelOrderTraversal();
-		checkPathSum2();
+		// checkPathSum2();
+		// checkSumNumbers();
+		checkTreeTraversal();
 	}
-	
+
 	/**
-	 *        5
-     *       / \
-     *      4   8
-     *     /   / \
-     *    11  13  4
-     *   /  \    / \
-     *  7    2  5   1
-     *  
+	 * 5 / \ / \ 4 8 / \ \ 3 11 6 / \ / 7 2 1
+	 * 
+	 * Pre-order : 5, 4, 3, 11, 7, 2, 8, 6, 1 Post-order: 3, 7, 2, 11, 4, 1, 6,
+	 * 8, 5 In-order : 3, 4, 7, 11, 2, 5, 8, 1, 6
+	 * 
+	 */
+	public static void checkTreeTraversal() {
+		TreeNode root5 = new TreeNode(5);
+		TreeNode node4 = new TreeNode(4);
+		TreeNode node8 = new TreeNode(8);
+		TreeNode node6 = new TreeNode(6);
+		TreeNode node7 = new TreeNode(7);
+		TreeNode node2 = new TreeNode(2);
+		TreeNode node1 = new TreeNode(1);
+		TreeNode node3 = new TreeNode(3);
+		TreeNode node11 = new TreeNode(11);
+
+		root5.left = node4;
+		root5.right = node8;
+		node4.left = node3;
+		node4.right = node11;
+		node11.left = node7;
+		node11.right = node2;
+		node8.right = node6;
+		node6.left = node1;
+		printTree(root5);
+
+		System.out.println("PreOrder Traversal: " + preorderTraversal(root5));
+		List<Integer> preOrderResult = new ArrayList<>();
+		recursivePreorderTraversal(root5, preOrderResult);
+		System.out.println("Recursive PreOrder Traversal: " + preOrderResult);
+	}
+
+	public static void checkSumNumbers() {
+		TreeNode root = new TreeNode(4);
+		TreeNode childLeft1 = new TreeNode(2);
+		TreeNode childRight1 = new TreeNode(7);
+		TreeNode childLeft1left = new TreeNode(1);
+		TreeNode childLeft1right = new TreeNode(3);
+		root.left = childLeft1;
+		root.right = childRight1;
+		childLeft1.left = childLeft1left;
+		childLeft1.right = childLeft1right;
+
+		childRight1.left = new TreeNode(6);
+		childRight1.right = new TreeNode(9);
+		printTree(root);
+
+		System.out.println("result: " + sumNumbers(root));
+	}
+
+	/**
+	 * 5 / \ 4 8 / / \ 11 13 4 / \ / \ 7 2 5 1
+	 * 
 	 */
 	public static void checkPathSum2() {
-		TreeNode root5 = new TreeNode(5); TreeNode node4 = new TreeNode(4); TreeNode node8 = new TreeNode(8); TreeNode node11 = new TreeNode(11);
-		TreeNode node13 = new TreeNode(13); TreeNode node4_2 = new TreeNode(4); TreeNode node7 = new TreeNode(7); TreeNode node2 = new TreeNode(2);
-		TreeNode node5 = new TreeNode(5); TreeNode node1 = new TreeNode(1);
-		
-		root5.left = node8; root5.right = node4;
+		TreeNode root5 = new TreeNode(5);
+		TreeNode node4 = new TreeNode(4);
+		TreeNode node8 = new TreeNode(8);
+		TreeNode node11 = new TreeNode(11);
+		TreeNode node13 = new TreeNode(13);
+		TreeNode node4_2 = new TreeNode(4);
+		TreeNode node7 = new TreeNode(7);
+		TreeNode node2 = new TreeNode(2);
+		TreeNode node5 = new TreeNode(5);
+		TreeNode node1 = new TreeNode(1);
+
+		root5.left = node8;
+		root5.right = node4;
 		node4.left = node11;
-		node8.left = node13; node8.right = node4_2;
-		node11.left = node7; node11.right = node2;
-		node4_2.left = node5; node4_2.right = node1;
+		node8.left = node13;
+		node8.right = node4_2;
+		node11.left = node7;
+		node11.right = node2;
+		node4_2.left = node5;
+		node4_2.right = node1;
 		printTree(root5);
-		
+
 		System.out.println("Check Path Sum for 22: " + pathSum(root5, 22));
 	}
-	
+
 	public static void createAndCheckLevelOrderTraversal() {
 		// {3,9,20,#,#,15,7}
 		TreeNode root = new TreeNode(3);
@@ -684,37 +744,156 @@ public class TreeSamples {
 	// **************************************************************************************************
 	public static List<List<Integer>> pathSum(TreeNode root, int sum) {
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
-		if(root == null){
+		if (root == null) {
 			return result;
 		}
-		
+
 		List<Integer> list = new ArrayList<Integer>();
 		list.add(root.val);
-		dfs(root, sum-root.val, result, list);
+		dfs(root, sum - root.val, result, list);
 		return result;
-    }
-	
-	public static void dfs(TreeNode node, int sum, List<List<Integer>> result, List<Integer> list){
-		
-		if(node.left == null && node.right == null && sum == 0){
+	}
+
+	public static void dfs(TreeNode node, int sum, List<List<Integer>> result, List<Integer> list) {
+
+		if (node.left == null && node.right == null && sum == 0) {
 			List<Integer> temp = new ArrayList<Integer>();
 			temp.addAll(list);
 			result.add(temp);
 		}
-		
-		//search left nodes
-		if(node.left != null){
+
+		// search left nodes
+		if (node.left != null) {
 			list.add(node.left.val);
 			dfs(node.left, sum - node.left.val, result, list);
 			list.remove(list.size() - 1);
 		}
-		
-		if(node.right != null){
+
+		if (node.right != null) {
 			list.add(node.right.val);
 			dfs(node.right, sum - node.right.val, result, list);
 			list.remove(list.size() - 1);
 		}
-		
+
 	}
-	
+
+	// **************************************************************************************************
+	// **************************************************************************************************
+	public static int sumNumbers(final TreeNode root) {
+		int result = 0;
+		if (root == null) {
+			return result;
+		}
+
+		List<List<TreeNode>> allNodes = new ArrayList<>();
+		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		nodes.add(root);
+		dfs(root, nodes, allNodes);
+
+		for (List<TreeNode> list : allNodes) {
+			int num = 0;
+			int listSize = list.size();
+			for (TreeNode node : list) {
+				int multiplier = (int) (Math.pow(10, --listSize));
+				num = num + (node.val * multiplier);
+			}
+			result = result + num;
+		}
+
+		return result;
+	}
+
+	public static void dfs(final TreeNode node, final List<TreeNode> nodes, final List<List<TreeNode>> allNodes) {
+		if (node.left == null && node.right == null) {
+			List<TreeNode> temp = new ArrayList<TreeNode>();
+			temp.addAll(nodes);
+			allNodes.add(temp);
+		}
+
+		if (node.left != null) {
+			nodes.add(node.left);
+			dfs(node.left, nodes, allNodes);
+			nodes.remove(nodes.size() - 1);
+		}
+
+		if (node.right != null) {
+			nodes.add(node.right);
+			dfs(node.right, nodes, allNodes);
+			nodes.remove(nodes.size() - 1);
+		}
+	}
+
+	public static List<Integer> preorderTraversal(final TreeNode root) {
+		List<Integer> result = new ArrayList<Integer>();
+		if (root == null) {
+			return result;
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+
+		while (!stack.isEmpty()) {
+			TreeNode temp = stack.pop();
+			result.add(temp.val);
+
+			if (temp.right != null) {
+				stack.push(temp.right);
+			}
+			if (temp.left != null) {
+				stack.push(temp.left);
+			}
+		}
+		return result;
+	}
+
+	public static void recursivePreorderTraversal(final TreeNode root, final List<Integer> result) {
+		if (root == null) {
+			return;
+		}
+		result.add(root.val);
+		recursivePreorderTraversal(root.left, result);
+		recursivePreorderTraversal(root.right, result);
+		return;
+	}
+
+	public static List<Integer> postOrderTraversal(final TreeNode root){
+    	List<Integer> result = new ArrayList<>();
+    	if(root == null){
+    		return result;
+    	}
+    	
+    	Stack<TreeNode> stack = new Stack<>();
+    	stack.push(root);
+    	
+    	TreeNode prev = null;
+    	
+    	while(!stack.isEmpty()){
+    		TreeNode curr = stack.peek();
+    		
+    		//Going through tree until the leaf node
+    		//checking prev == null for root node
+    		if(prev == null || curr.left == null || curr.right == null){
+    			if(curr.left != null){
+    				stack.push(curr.left);
+    			} else if(curr.right != null){
+    				stack.push(curr.right);
+    			} else {
+    				stack.pop();
+    				result.add(curr.val);
+    			}
+    		} else if (curr.left == prev) {
+    			//Going up the tree from left node and pushing right child to stack if there is one
+    			if(curr.right != null){
+    				stack.push(curr.right);
+    			} else {
+    				stack.pop();
+    				result.add(curr.val);
+    			}
+    		} else if (curr.right == prev){
+    			stack.pop();
+    			result.add(curr.val);
+    		}
+    		prev = curr;
+    	}
+    	return result;
+    }
 }
