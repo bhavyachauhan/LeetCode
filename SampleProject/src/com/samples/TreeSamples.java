@@ -38,8 +38,66 @@ public class TreeSamples {
 		// checkPathSum2();
 		// checkSumNumbers();
 		checkTreeTraversal();
+		//checkLCAInBinaryTree();
+		//getKthSmallestInBST();
+	}
+	
+	/**
+	 * 
+	 * 			_6_
+	 * 		   /   \
+	 * 		  /     \
+	 * 		 2	     8
+	 * 		/ \     / \
+	 * 	   0   4   7   9
+	 * 		  / \
+	 *		 3   5
+	 */
+	public static void getKthSmallestInBST() {
+		TreeNode root = new TreeNode(6); TreeNode child6Left = new TreeNode(2); TreeNode child6Right = new TreeNode(8);
+		TreeNode child2Left = new TreeNode(0); TreeNode child2Right = new TreeNode(4);
+		TreeNode child4Left = new TreeNode(3); TreeNode child4Right = new TreeNode(5);
+		TreeNode child8Left = new TreeNode(7); TreeNode child8Right = new TreeNode(9);
+
+		root.left = child6Left; root.right = child6Right;
+		child6Left.left = child2Left; child6Left.right = child2Right;
+		child2Right.left = child4Left; child2Right.right = child4Right;
+		child6Right.left = child8Left; child6Right.right = child8Right;
+		printTree(root);
+		System.out.println("2: 2nd smallest: " + kthSmallest(root, 2));
+		System.out.println("0: 1st smallest: " + kthSmallest(root, 1));
+		System.out.println("5: 5th smallest: " + kthSmallest(root, 5));
+
 	}
 
+	
+	/**
+	 *  	  3 
+	 * 		/   \ 
+	 * 	   /     \ 
+	 *    5       1 
+	 *   / \     / \ 
+	 *  6   2   0   8 
+	 *     / \     
+	 *    7   4   
+	 */
+	public static void checkLCAInBinaryTree(){
+		TreeNode root3 = new TreeNode(3); TreeNode node5 = new TreeNode(5); TreeNode node1 = new TreeNode(1);
+		TreeNode node6 = new TreeNode(6); TreeNode node2 = new TreeNode(2); TreeNode node0 = new TreeNode(0);
+		TreeNode node8 = new TreeNode(8); TreeNode node7 = new TreeNode(7); TreeNode node4 = new TreeNode(4);
+		
+		root3.left = node5; root3.right = node1;
+		node1.left = node0; node1.right = node8;
+		node5.left = node6; node5.right = node2;
+		node2.left = node7; node2.right = node4;
+		
+		System.out.println("LCA for 3,4: " + getLCAInBT(root3, root3, node4).val);
+		System.out.println("LCA for 0,8: " + getLCAInBT(root3, node0, node8).val);
+		System.out.println("LCA for 1,7: " + getLCAInBT(root3, node1, node7).val);
+		System.out.println("LCA for 6,4: " + getLCAInBT(root3, node6, node4).val);
+		System.out.println("LCA for 3,3: " + getLCAInBT(root3, root3, root3).val);
+	}
+	
 	/**
 	 *  	 5 
 	 * 		/ \ 
@@ -71,10 +129,16 @@ public class TreeSamples {
 		List<Integer> preOrderResult = new ArrayList<>();
 		recursivePreOrderTraversal(root5, preOrderResult);
 		System.out.println("Recursive PreOrder Traversal: " + preOrderResult);
+		
 		System.out.println("PostOrder Traversal: " + postOrderTraversal(root5));
 		List<Integer> postOrderResult = new ArrayList<>();
 		recursivePostOrderTraversal(root5, postOrderResult);
-		System.out.println("Recursive PreOrder Traversal: " + postOrderResult);
+		System.out.println("Recursive PostOrder Traversal: " + postOrderResult);
+		
+		System.out.println("InOrder Traversal: " + inOrderTraversal(root5));
+		List<Integer> inOrderResult = new ArrayList<>();
+		recursiveInOrderTraversal(root5, inOrderResult);
+		System.out.println("Recursive InOrder Traversal: " + inOrderResult);
 		
 	}
 
@@ -910,5 +974,67 @@ public class TreeSamples {
 		return;
 		
 	}
-
-}
+	
+	public static List<Integer> inOrderTraversal(final TreeNode root) {
+		List<Integer> result = new ArrayList<>();
+		if(root == null) {
+			return result;
+		}
+		
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode temp = root;
+		
+		while(!stack.isEmpty() || temp != null){
+			
+			if(temp != null){
+				stack.push(temp);
+				temp = temp.left;
+			} else {
+				TreeNode t = stack.pop();
+				result.add(t.val);
+				temp = t.right;
+			}
+		}
+		return result;
+	}
+	
+	public static void recursiveInOrderTraversal(final TreeNode node, List<Integer> result){
+    	if(node.left != null){
+    		recursiveInOrderTraversal(node.left, result);
+    	}
+    	result.add(node.val);
+    	if(node.right != null){
+    		recursiveInOrderTraversal(node.right, result);
+    	}
+    }
+    
+    public static TreeNode getLCAInBT(final TreeNode node, final TreeNode p, final TreeNode q) {
+    	
+    	if(node == null){
+    		return null;
+    	}
+    	if(node == p || node == q){
+    		return node;
+    	}
+    	
+    	TreeNode left = getLCAInBT(node.left, p, q);
+    	TreeNode right = getLCAInBT(node.right, p, q);
+    	
+    	if(left!= null && right != null){
+    		return node;
+    	}
+    	
+    	return left != null ? left : right;
+    }	
+    
+    public static int kthSmallest(final TreeNode root, int k) {
+        List<Integer> result = new ArrayList<Integer>();
+        if(root == null){
+        	return -1;
+        }
+        recursiveInOrderTraversal(root, result);
+        System.out.println("InOrder Traversal: " + result);
+    	return result.get(k-1);
+    }
+  
+}	
