@@ -37,9 +37,16 @@ public class TreeSamples {
 		// createAndCheckLevelOrderTraversal();
 		// checkPathSum2();
 		// checkSumNumbers();
-		checkTreeTraversal();
+		//checkTreeTraversal();
 		//checkLCAInBinaryTree();
 		//getKthSmallestInBST();
+		getBSTFromSortedArray();
+	}
+	
+	public static void getBSTFromSortedArray(){
+		int[] num = {0, 2, 3, 4, 5, 6, 7, 8, 9};
+		System.out.println(Arrays.toString(num));
+		printTree(sortedArrayToBST(num));
 	}
 	
 	/**
@@ -1037,4 +1044,23 @@ public class TreeSamples {
     	return result.get(k-1);
     }
   
+    public static TreeNode sortedArrayToBST(int[] num) {
+    	if(num.length == 0){
+    		return null;
+    	}
+    	return sortedArrayToBST(num, 0, num.length - 1);
+    }
+
+    public static TreeNode sortedArrayToBST(int[] num, int first, int last){
+    	if(first > last){
+    		return null;
+    	}
+    	
+    	int mid = (first + last) / 2; 
+    	TreeNode node = new TreeNode(num[mid]);
+    	node.left = sortedArrayToBST(num, first, mid - 1);
+    	node.right = sortedArrayToBST(num, mid + 1, last);
+    	return node;
+    }
+    
 }	
