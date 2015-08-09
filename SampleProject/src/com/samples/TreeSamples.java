@@ -37,16 +37,49 @@ public class TreeSamples {
 		// createAndCheckLevelOrderTraversal();
 		// checkPathSum2();
 		// checkSumNumbers();
-		//checkTreeTraversal();
-		//checkLCAInBinaryTree();
-		//getKthSmallestInBST();
-		getBSTFromSortedArray();
+		// checkTreeTraversal();
+		// checkLCAInBinaryTree();
+		// getKthSmallestInBST();
+		// getBSTFromSortedArray();
+		constructBinaryTreeFromPreAndIn();
+	}
+
+	/**
+	 *  	 5 
+	 * 		/ \ 
+	 * 	   /   \ 
+	 *    4     8 
+	 *   / \     \ 
+	 *  3   11    6 
+	 *     / \   / 
+	 *    7   2 1
+	 * 
+	 * Pre-order : 5, 4, 3, 11, 7, 2, 8, 6, 1 
+	 * Post-order: 3, 7, 2, 11, 4, 1, 6, 8, 5 
+	 * In-order  : 3, 4, 7, 11, 2, 5, 8, 1, 6
+	 * 
+	 */
+	public static void constructBinaryTreeFromPreAndIn(){
+		int[] inorder = {3, 4, 7, 11, 2, 5, 8, 1, 6};
+		int[] preorder = {5, 4, 3, 11, 7, 2, 8, 6, 1};
+		final TreeNode root = buildTree(preorder, inorder);
+		System.out.println("***************************************");
+		printTreeLevelOrder(root);
+		System.out.println("***************************************");
+		printTree(root);
+		
 	}
 	
 	public static void getBSTFromSortedArray(){
 		int[] num = {0, 2, 3, 4, 5, 6, 7, 8, 9};
 		System.out.println(Arrays.toString(num));
-		printTree(sortedArrayToBST(num));
+
+		final TreeNode root = sortedArrayToBST(num);
+		System.out.println("***************************************");
+		printTreeLevelOrder(root);
+		System.out.println("***************************************");
+		printTree(root);
+		 
 	}
 	
 	/**
@@ -1063,4 +1096,61 @@ public class TreeSamples {
     	return node;
     }
     
+	public static void flatten(TreeNode root) {
+		Stack<TreeNode> stack = new Stack<TreeNode>();
+		TreeNode temp = root;
+		while (!stack.isEmpty() || temp != null) {
+			if (temp != null) {
+				stack.push(temp.right);
+			}
+			
+			if (temp.left != null) {
+				temp.right = temp.left;
+				temp.left = null;
+			} else if (!stack.empty()) {
+				TreeNode t = stack.pop();
+				temp.right = t;
+			}
+			temp = temp.right;
+		}
+	}
+	
+	 public static TreeNode buildTree(int[] preorder, int[] inorder) {
+		 int preStart= 0;
+		 int preEnd = preorder.length - 1;
+		 int inStart = 0;
+		 int inEnd = inorder.length - 1;
+		 
+		 return buildTree(preorder, preStart, preEnd, inorder, inStart, inEnd);
+	 }   
+	 
+	 public static TreeNode buildTree(int[] preOrder, int preStart, int preEnd, int[] inOrder, int inStart, int inEnd){
+		 if(preStart > preEnd || inStart > inEnd){
+		        return null;
+		 }
+		 
+		 int nodeVal = preOrder[preStart];
+		 System.out.println("NodeVal = " + nodeVal);
+		 TreeNode node = new TreeNode(nodeVal);
+		 
+		 int index = 0;
+		 for(int i = 0; i < inOrder.length; i++){
+			 if(nodeVal == inOrder[i]){
+				 index = i;
+				 break;
+			 }
+		 }
+		 
+		System.out.println("node.left = buildTree( " + Arrays.toString(preOrder) + " , " + (preStart + 1) + " , "
+				+ (preStart + (index - inStart)) + " , " + Arrays.toString(inOrder) + " , " + inStart + " , " + (index - 1) + " ) ");
+		System.out.println("node.right = buildTree( " + Arrays.toString(preOrder) + " , " + (preStart + (index - inStart) + 1) + " , "
+				+ preEnd + " , " + Arrays.toString(inOrder) + " , " + (index + 1) + " , " + inEnd + " ) ");
+		node.left = buildTree(preOrder, preStart + 1, preStart + (index - inStart), inOrder, inStart, index - 1);
+		node.right = buildTree(preOrder, preStart + (index - inStart) + 1, preEnd, inOrder, index + 1, inEnd);
+		
+		System.out.println("node.left.val = " + node == null ? "Node is NULL" : (node.left == null ? "NULL" : node.left.val));
+		System.out.println("node.right.val = " + node == null ? "Node is NULL" : (node.right == null ? "NULL" : node.right.val));
+		System.out.println("--------------------------------------------------------------------");
+		return node;
+	 }
 }	
