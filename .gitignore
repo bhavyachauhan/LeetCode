@@ -3,3 +3,5 @@ RemoteSystemsTempFiles/.project
 SampleProject/.settings/org.eclipse.jdt.core.prefs
 *.project
 SampleProject/.classpath
+.recommenders/
+SampleProject/bin/
