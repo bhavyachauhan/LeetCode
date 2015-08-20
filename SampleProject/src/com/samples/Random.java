@@ -1,8 +1,13 @@
 package com.samples;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Random {
 	public static void main(String[] args) {
@@ -18,9 +23,11 @@ public class Random {
 		System.out.println("isMatch(aa, ?*): " + isMatch("ab", "?*") );
 		System.out.println("isMatch(aab, c*a*b): " + isMatch("aab", "c*a*b") ); */
 		
-		BigInteger bi1 = new BigInteger("152");
-		BigInteger bi2 = new BigInteger("21");
-		System.out.println("Sum: " + add(bi1, bi2));
+//		BigInteger bi1 = new BigInteger("152");
+//		BigInteger bi2 = new BigInteger("21");
+//		System.out.println("Sum: " + add(bi1, bi2));
+		
+		System.out.println(Arrays.toString(readFile("C:/Users/Bhavya/Desktop/New Text Document.txt")));
 	}
 	
 	public static boolean isMatch(String s, String p) {
@@ -109,5 +116,79 @@ public class Random {
 		System.out.println("result: " + Arrays.toString(result));
 		return new BigInteger(result);
 	}
+	
+	public static String[] readFile(String filepath){
+		final File file = new File(filepath);
+		final List<String> result = new ArrayList<String>();
+		try{
+			FileInputStream inputStream = new FileInputStream(filepath);
+			byte[] buffer = new byte[(int)file.length()];
+			int total = 0;
+			int read = 0;
+			while((read = inputStream.read(buffer)) != -1){
+				result.add(new String(buffer));
+				total += read;
+			}
+			inputStream.close();
+			
+		} catch(FileNotFoundException e){
+			System.out.println("Cannot find the file: " + filepath);
+		} catch(IOException e){
+			System.out.println("Error reading file: " + filepath);
+		}
+		return (String[])result.toArray();
+	}
+	
+	/*
+	 * // A stream of numbers. Write a method to return the medium you have recieved
+
+//3, 1, 9, 7, 5, ...
+
+public class RunningMedian(){
+
+    PriorityQueue<Integer> minHeap;
+    PriorityQueue<Integer> maxHeap;
+    
+    public RunningMedian(){
+        maxHeap = new PriorityQueue<Integer>(10, 
+            new Comparator<Integer>(){
+                
+                @Override
+                public int compare(){
+                    
+                }
+
+            });
+        minHeap = new PriorityQueue<Integer>();
+ 
+    }
+
+    public void addNumber(int num) {
+        if(num >= minHeap.peek()){
+            minHeap.add(num);
+        } else {
+            maxHeap.add(num);
+        }
+  
+        if(minHeap.size() - maxHeap.size() == 2){
+            maxHeap.add(minHeap.poll());
+        } else if(maxHeap.size() - minHeap.size() == 2){
+            minHeap.add(maxHeap.poll);
+        }
+    }
+    
+    public int findMedian(){
+        
+        if(minHeap.size() == maxHeap.size()){
+            return ((minHeap.peek() + maxHeap.peek())/2.0)
+        } else if(minHeap.size() > maxHeap.size()){
+            return minHeap.peek();
+        } else {
+            return maxHeap.peek();
+        }
+    }
+
+}
+	 */
 	
 }
