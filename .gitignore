@@ -5,3 +5,5 @@ SampleProject/.settings/org.eclipse.jdt.core.prefs
 SampleProject/.classpath
 .recommenders/
 SampleProject/bin/
+*.classpath
+BCDInterviewProblem
